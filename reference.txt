@@ -1,0 +1,81 @@
+10140 - Justin
+10156 - Madiraju
+
+First quarter Justin -> Madiraju assist
+
+t = 50 is the start of a game
+t = 22 is a score. R is the receiver. The previous input is the thrower.
+t = 2 is D-line
+t = 1 is O-line
+t = 5 is a block (McKelvey is 10166, got a block early on)
+t = 3 is a pull. r = who pulled it. ms = milliseconds hangtime ? 
+t = 20 is "someone has the disc" (could be picking up after a turn)
+t = 21 is an opponent score
+t = 8 is a throwaway
+t = 9 is a "Throwaway caused" (maybe 13 also?)
+t = 41 is a substitution - L represents who subs onto the field. 
+t = 14 contains "when" the timeout occurred
+t = 23 is end of 1st quarter
+t = 24 is end of 2nd quarter
+t = 25 is end of 3rd quarter
+t = 26 is end of 4th quarter
+t = 19 is a drop
+t = 4 is OB pull
+
+s = time remaining in quarter, in seconds. (394 -> 6:34 remaining)
+
+unknown T's - 13, 11, 12
+
+x = width
+y = length
+r = who did the thing
+t = event type
+s = time remaining in quarter
+ms = duration of event (usually pulls?)
+c = disc was centered as a result (of a penalty)
+
+From https://theaudl.com/sites/default/files/react/stats-pages/static/js/constants/EventDisplayTypes.js:
+
+// Defense (11)
+export const SET_D_LINE = 2;
+export const SET_D_LINE_NO_PULL = 40;
+export const PULL_INBOUNDS = 3;
+export const PULL_OUT_OF_BOUNDS = 4;
+export const PULL_OUR_OFFSIDES = 44;
+export const PULL_THEIR_OFFSIDES = 45;
+export const BLOCK = 5;
+export const THROWAWAY_CAUSED = 9;
+export const CALLAHAN = 6;
+export const SCORED_ON = 21;
+export const STALL_CAUSED = 18;
+export const D_PENALTY_ON_US = 11;
+export const O_PENALTY_ON_THEM = 13;
+export const THEIR_MIDPOINT_TIMEOUT = 15;
+export const THEIR_TIMEOUT_ON_O = 31;
+export const OUR_TIMEOUT_ON_D = 32;
+
+// Offense (10)
+export const SET_O_LINE = 1;
+export const SET_O_LINE_NO_PULL = 41;
+export const DROP = 19;
+export const POSSESSION = 20;
+export const CALLAHAN_THROWN = 7;
+export const THROWAWAY = 8;
+export const GOAL = 22;
+export const STALL = 17;
+export const O_PENALTY_ON_US = 10;
+export const D_PENALTY_ON_THEM = 12;
+export const OUR_MIDPOINT_TIMEOUT = 14;
+export const THEIR_TIMEOUT_ON_D = 29;
+export const OUR_TIMEOUT_ON_O = 30;
+
+// Any (9)
+export const UNKNOWN = 0;
+export const INJURY_ON_O = 42;    // XBDN Split into O vs D
+export const INJURY_ON_D = 43;    // XBDN Split into O vs D
+export const END_OF_Q1 = 23;
+export const HALFTIME = 24;
+export const END_OF_Q3 = 25;
+export const GAME_OVER = 26;
+export const END_OF_OT1 = 27;
+export const END_OF_OT2 = 28;

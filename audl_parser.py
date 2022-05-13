@@ -6,11 +6,12 @@ import logging
 
 
 # Retrieves the game
-def get_events_for_team(team_id, years_bad) -> str:
+def get_events_for_team(team_id, years_bad) -> pandas.DataFrame:
     pass
 
 # URL to get matchups from -> https://audl-stat-server.herokuapp.com/web-api/games?limit=10&years=2021,2022&page=29
 # team_id is generally the team mascot, all lowercase
+# Returns a list of dicts
 def get_game_list_for_team(team_id=None, years_back=2) -> list:
     logging.info(f"Getting list of games for team {team_id} for {years_back} years")
     game_list = list()
@@ -38,7 +39,7 @@ def get_game_list_for_team(team_id=None, years_back=2) -> list:
     for game in d["games"]:
         # If there's no roster, the game is in the far future. This should probably just compare to the startTimestamp tho - "startTimestamp":"2022-07-23T18:00:00-04:00"
         if game["hasRosterReport"]:
-            game_list.append(game["gameID"])
+            game_list.append(game)
 
     for page in range(2, page_count):
         r = requests.get(f"https://audl-stat-server.herokuapp.com/web-api/games?limit=20&years={years}{team_id_string}&page=1")
@@ -46,7 +47,7 @@ def get_game_list_for_team(team_id=None, years_back=2) -> list:
         for game in d["games"]:        
             # If there's no roster, the game is in the far future. This should probably just compare to the startTimestamp tho - "startTimestamp":"2022-07-23T18:00:00-04:00"
             if game["hasRosterReport"]:
-                game_list.append(game["gameID"])
+                game_list.append(game)
     return game_list
 
 # Returns the json from https://audl-stat-server.herokuapp.com/stats-pages/game/{game_id} for the given game id

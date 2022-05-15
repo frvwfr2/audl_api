@@ -66,15 +66,23 @@ def load_data_from_file(filepath) -> dict:
         d = json.load(f)
     return d
 
-# Logs all info to console, currently. should def slap it into a dataframe. Or just a mega-dict -> dataframe later
-def parse_game_data(d):
-    # Create a dict to store the players in
+# Returns a python dict
+def get_players_from_game(d):
+    
     players_dict = dict()
     for player in d["rostersHome"]:
         players_dict[player["id"]] = f'{player["player"]["first_name"]} {player["player"]["last_name"]}'
     for player in d["rostersAway"]:
         players_dict[player["id"]] = f'{player["player"]["first_name"]} {player["player"]["last_name"]}'
+    
+    return players_dict
 
+# Logs all info to console, currently. should def slap it into a dataframe. Or just a mega-dict -> dataframe later
+def parse_game_data(d):
+    
+    # Create a dict to store the players in
+    players_dict = get_players_from_game(d)
+    
     away_team = d["tsgAway"]
     events = json.loads(away_team["events"])
     # print(events)
@@ -85,6 +93,8 @@ def parse_game_data(d):
     for e in events:
         player = ""
         time = ""
+        x= ""
+        y = ""
         # print(e)
         # event_type = e["t"]
         event_type = event_ids[str(e["t"])]
@@ -121,10 +131,16 @@ def parse_game_data(d):
         # If there is a player associated with this event...
         if "r" in e:
             player = players_dict[e["r"]]
-        info = f"{spacing}{time}{event_type} {player}"
+        # If there are x,y coordinates with this event
+        if "x" in e:
+            x = e['x']
+        if "y" in e:
+            y = e['y']
+
+        info = f"{spacing}{time}{event_type} {player} X: {x}, Y: {y}"
         print(info)
         # print(event_ids[str(e["t"])])
-
+        
 if __name__ == "__main__":
     # Load the event_types into event_ids dict
     with open("event_types.json", "r") as event_types:
@@ -137,4 +153,4 @@ if __name__ == "__main__":
     print(games)
 
     d = get_stats_for_game("2021-06-04-TB-PHI")
-    # parse_game_data(d)
+    parse_game_data(d)

@@ -77,18 +77,34 @@ def get_players_from_game(d):
     
     return players_dict
 
+def get_game_tuple(d):
+    game_id = d['game']['id']
+    home_team = d['game']['team_season_id_home']
+    away_team = d['game']['team_season_id_away']
+    date = d['game']['start_timestamp'][0:10]
+    
+    ret_tup = (game_id, date, home_team, away_team)
+    
+    return ret_tup
+
 # Logs all info to console, currently. should def slap it into a dataframe. Or just a mega-dict -> dataframe later
 def parse_game_data(d):
     
     # Create a dict to store the players in
     players_dict = get_players_from_game(d)
+    game_tup = get_game_tuple(d)
     
     away_team = d["tsgAway"]
+    
+    # Can change this for when we parse both teams
+    team_id = away_team['teamSeasonId']
+    
     events = json.loads(away_team["events"])
     # print(events)
 
     current_quarter = 0
-
+    tup_list = []
+    event_counter = 0
     # Locations of the previous event, to map the distance
     for e in events:
         player = ""
@@ -135,12 +151,25 @@ def parse_game_data(d):
         if "x" in e:
             x = e['x']
         if "y" in e:
-            y = e['y']
-
+            y = e['y']   
+        
+        # Print Info to console
         info = f"{spacing}{time}{event_type} {player} X: {x}, Y: {y}"
         print(info)
         # print(event_ids[str(e["t"])])
         
+        # Same Info, but list of tuples
+        # Could be a list of dicts or something but this is fine for now
+        tup = (event_counter, team_id, current_quarter, time, event_type, player, x, y)
+        tup_list.append(tup)
+        
+        event_counter +=1
+    
+    # Add info about the game/teams
+    full_tup_list = [game_tup + x for x in tup_list]
+    
+    return full_tup_list        
+    
 if __name__ == "__main__":
     # Load the event_types into event_ids dict
     with open("event_types.json", "r") as event_types:
@@ -153,4 +182,4 @@ if __name__ == "__main__":
     print(games)
 
     d = get_stats_for_game("2021-06-04-TB-PHI")
-    parse_game_data(d)
+    game_events = parse_game_data(d)

@@ -174,7 +174,7 @@ def parse_game_data(d, home_team=True, to_console=True):
                 for p in e.get("l"):
                     player += f'{players_dict[p]}, '
         # O Points and D Points
-        if event_type == "SET_O_LINE":
+        if event_type in ["SET_O_LINE"]:
             o_point = True
             d_point = False
         if event_type in ["SET_D_LINE"]:
@@ -238,7 +238,7 @@ if __name__ == "__main__":
     # print(len(games))
 
     game_raw = get_stats_for_game("2021-06-04-TB-PHI")
-    game_events = parse_game_data(game_raw, to_console=False)
+    game_events = parse_game_data(game_raw, home_team=False, to_console=False)
     
     flyers_games = get_game_list_for_team(team_id="flyers", years_back=1)
     flyers_games_ids = [x['gameID'] for x in flyers_games]

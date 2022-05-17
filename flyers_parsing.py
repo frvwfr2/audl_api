@@ -8,6 +8,7 @@ Created on Mon May 16 06:45:55 2022
 import argparse
 import json
 import logging
+import os
 import requests
 
 import pandas as pd
@@ -124,10 +125,13 @@ def parse_game_data(d, home_team=True, to_console=True):
     # Columns for DataFrame
     event_columns = [
         "event_counter", "team_id", "current_quarter", "time", 
-        "event_type", "player", "x", "y"
+        "event_type", "player", "x", "y", "o_point", "d_point"
         ]
     game_colums = ["game_id", "date", "home_team", "away_team"]
     current_quarter = None
+    o_point = False
+    d_point = False
+    
     # Locations of the previous event, to map the distance
     for e in events:
         
@@ -136,6 +140,7 @@ def parse_game_data(d, home_team=True, to_console=True):
         time = ""
         x= ""
         y = ""
+        
         
         # print(e)
         # event_type = e["t"]
@@ -168,6 +173,13 @@ def parse_game_data(d, home_team=True, to_console=True):
             if "l" in e:
                 for p in e.get("l"):
                     player += f'{players_dict[p]}, '
+        # O Points and D Points
+        if event_type == "SET_O_LINE":
+            o_point = True
+            d_point = False
+        if event_type in ["SET_D_LINE"]:
+            d_point = True
+            o_point = False
         
         # Event Parsing
         
@@ -251,4 +263,9 @@ if __name__ == "__main__":
             )
 
         big_flyers_df = pd.concat([big_flyers_df, single_game_events])
+        
+        output_file = "FlyersWeek3.csv"
+        big_flyers_df.to_csv(
+            os.path.join(os.path.abspath(""), output_file)
+            )
     
